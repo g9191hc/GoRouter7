@@ -46,6 +46,16 @@ final router = GoRouter(
           path: 'query_param',
           builder: (context, state) => QueryParamScreen(),
         ),
+        GoRoute(
+          path: 'query_param',
+          builder: (context, state) => QueryParamScreen(),
+        ),
+        ShellRoute(
+          builder: ,
+          routes: [
+
+          ]
+        )
       ],
     ),
   ],
