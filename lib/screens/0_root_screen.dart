@@ -50,6 +50,14 @@ class RootScreen extends StatelessWidget {
               'Go Query Param',
             ),
           ),
+          ElevatedButton(
+            onPressed: () {
+              context.go('/nested/a');
+            },
+            child: Text(
+              'Go Nested',
+            ),
+          ),
         ],
       ),
     );
