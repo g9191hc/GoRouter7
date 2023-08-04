@@ -7,11 +7,20 @@ import 'package:go_router_v7_actual/screens/5_pop_return_screen.dart';
 import 'package:go_router_v7_actual/screens/6_path_param_screen.dart';
 import 'package:go_router_v7_actual/screens/7_query_param_screen.dart';
 import 'package:go_router_v7_actual/screens/8_nested_screen.dart';
-
+import 'package:go_router_v7_actual/screens/9_login_screen.dart';
+import 'package:go_router_v7_actual/screens/9_private_screen.dart';
 import '../screens/1_basic_screen.dart';
 import '../screens/8_nested_child_screen.dart';
 
+//로그인 상태 여부
+bool authState = false;
+
 final router = GoRouter(
+  //routes의 모든 라우트의 path호출시에 먼저 체크함
+  redirect: (context, state){
+    if(state.location == '/login/private' && authState == false) return '/login';
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -72,7 +81,24 @@ final router = GoRouter(
               builder: (_, state) => NestedChildScreen(
                 routeName: '/nested/c',
               ),
-            )
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'login',
+          builder: (_, state) => LoginScreen(),
+          routes: [
+            GoRoute(
+              // 현재 라우트의 path호출시에만 먼저 체크함
+              redirect: (context, state){
+                if (authState == false){
+                  return '/login';
+                }
+                return null;
+              },
+              path: 'private',
+              builder: (_, state) => PrivateScreen(),
+            ),
           ],
         ),
       ],
