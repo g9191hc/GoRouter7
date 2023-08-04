@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:go_router_v7_actual/screens/10_transition_screen_1.dart';
+import 'package:go_router_v7_actual/screens/11_error_screen.dart';
 import 'package:go_router_v7_actual/screens/2_named_screen.dart';
 import 'package:go_router_v7_actual/screens/0_root_screen.dart';
 import 'package:go_router_v7_actual/screens/3_push_screen.dart';
@@ -9,6 +12,7 @@ import 'package:go_router_v7_actual/screens/7_query_param_screen.dart';
 import 'package:go_router_v7_actual/screens/8_nested_screen.dart';
 import 'package:go_router_v7_actual/screens/9_login_screen.dart';
 import 'package:go_router_v7_actual/screens/9_private_screen.dart';
+import '../screens/10_transition_screen_2.dart';
 import '../screens/1_basic_screen.dart';
 import '../screens/8_nested_child_screen.dart';
 
@@ -17,8 +21,9 @@ bool authState = false;
 
 final router = GoRouter(
   //routes의 모든 라우트의 path호출시에 먼저 체크함
-  redirect: (context, state){
-    if(state.location == '/login/private' && authState == false) return '/login';
+  redirect: (context, state) {
+    if (state.location == '/login/private' && authState == false)
+      return '/login';
     return null;
   },
   routes: [
@@ -90,8 +95,8 @@ final router = GoRouter(
           routes: [
             GoRoute(
               // 현재 라우트의 path호출시에만 먼저 체크함
-              redirect: (context, state){
-                if (authState == false){
+              redirect: (context, state) {
+                if (authState == false) {
                   return '/login';
                 }
                 return null;
@@ -101,7 +106,42 @@ final router = GoRouter(
             ),
           ],
         ),
+        GoRoute(
+          path: 'transition',
+          builder: (_, state) => TransitionScreenOne(),
+          routes: [
+            GoRoute(
+              path: 'detail',
+              pageBuilder: (_, state) => CustomTransitionPage(
+                child: TransitionScreenTwo(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  //페이드
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+
+                  // //확대/축소
+                  // return ScaleTransition(
+                  //   scale: animation,
+                  //   child: child,
+                  // );
+
+                  // // 회전
+                  // return RotationTransition(
+                  //   turns: animation,
+                  //   child: child,
+                  // );
+                },
+                // transitionDuration: Duration(seconds: 3),
+              ),
+            ),
+          ],
+        ),
       ],
     ),
   ],
+  errorBuilder: (context, state) => ErrorScreen(error: state.error.toString()),
+  debugLogDiagnostics: true,
 );
